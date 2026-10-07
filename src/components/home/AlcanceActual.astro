@@ -1,0 +1,29 @@
+---
+/** Banner "Alcance Actual" (122:683 desktop / 245:491 móvil), exportado tal cual del Figma. */
+import { getImage } from "astro:assets";
+import banner from "../../assets/illustrations/alcance-actual.jpg";
+import bannerMovil from "../../assets/illustrations/alcance-actual-mobile.jpg";
+
+const [desk1, desk2, movil] = await Promise.all([
+  getImage({ src: banner, width: 960, format: "webp" }),
+  getImage({ src: banner, width: 1644, format: "webp" }),
+  getImage({ src: bannerMovil, width: 364, format: "webp" }),
+]);
+---
+
+<section class="container-lr reveal" aria-label="Alcance actual">
+  <picture>
+    <source media="(max-width: 767px)" srcset={movil.src} width="364" height="543" />
+    <img
+      src={desk2.src}
+      srcset={`${desk1.src} 960w, ${desk2.src} 1644w`}
+      sizes="(min-width: 1920px) 1644px, 86vw"
+      width="1644"
+      height="525"
+      loading="lazy"
+      decoding="async"
+      alt="Alcance actual: atendemos en San Salvador; muy pronto en más departamentos de El Salvador."
+      class="mx-auto h-auto w-full max-w-[364px] rounded-[23px] shadow-[inset_0_-4px_15.5px_rgb(255_62_67/0.25),inset_0_4px_15.5px_rgb(255_62_67/0.25),0_0_0_1px_rgb(255_62_67/0.25)] md:max-w-none"
+    />
+  </picture>
+</section>

@@ -1,0 +1,44 @@
+---
+import "@fontsource/poppins/300.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/playfair-display/400.css";
+import "@fontsource/playfair-display/600.css";
+import "@fontsource/kapakana/400.css";
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import Navbar from "../components/layout/Navbar.astro";
+import AgeGate from "../components/AgeGate";
+import { SITE } from "../config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.descripcion } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.nombre}` : `${SITE.nombre} · ${SITE.descripcion}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#080711" />
+    <meta name="rating" content="adult" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>{pageTitle}</title>
+    <ClientRouter />
+  </head>
+  <body class="bg-bg text-ink">
+    <Navbar />
+    <main>
+      <slot />
+    </main>
+    <slot name="after" />
+    <AgeGate client:load transition:persist />
+  </body>
+</html>

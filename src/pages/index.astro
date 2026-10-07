@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/home/Hero.astro";
+import Pasos from "../components/home/Pasos.astro";
+import AlcanceActual from "../components/home/AlcanceActual.astro";
+import ModelGrid from "../components/home/ModelGrid.astro";
+import Atencion from "../components/home/Atencion.astro";
+import Faq from "../components/home/Faq.astro";
+import ContactoCta from "../components/home/ContactoCta.astro";
+import Cierre from "../components/layout/Cierre.astro";
+import { modelosActivas } from "../lib/modelos";
+
+const modelos = await modelosActivas();
+---
+
+<BaseLayout>
+  <Hero />
+  <Pasos />
+  <AlcanceActual />
+  <ModelGrid modelos={modelos} />
+  <Atencion />
+  <Faq />
+  <ContactoCta />
+  <Cierre slot="after" />
+</BaseLayout>

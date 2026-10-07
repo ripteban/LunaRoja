@@ -1,0 +1,45 @@
+---
+/** "Atención Personalizada" (238:327 desktop / 250:990 móvil). */
+import { Image } from "astro:assets";
+import fondo from "../../assets/backgrounds/atencion-luna-ciudad.jpg";
+import { Bubble, CoberturaArrow, LockHeart } from "../ui/icons";
+
+const items = [
+  { Icono: LockHeart, titulo: "Privacidad", texto: ["Tu información", "siempre protegida."] },
+  { Icono: CoberturaArrow, titulo: "Cobertura local", texto: ["Atención en", "San Salvador."] },
+  { Icono: Bubble, titulo: "Comunicación Directa", texto: ["Habla directamente", "con nuestro equipo."] },
+];
+---
+
+<section class="container-lr">
+  <div class="relative isolate overflow-hidden px-1 pb-[52vw] pt-8 md:min-h-[48vw] md:px-[3vw] md:pb-[3vw] md:pt-[2.3vw] xl:min-h-0 xl:pb-[6vw]">
+    <Image
+      src={fondo}
+      alt=""
+      widths={[640, 1100, 1644]}
+      sizes="(min-width: 1920px) 1644px, 90vw"
+      class="absolute inset-0 -z-10 size-full object-cover object-[70%_center] [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_72%)] md:object-center"
+    />
+    <h2 class="t-section reveal">Atención Personalizada</h2>
+    <p class="reveal mt-8 max-w-[56ch] text-[19px] font-light leading-snug md:mt-[3.5vw] md:text-[clamp(18px,1.94vw,37.2px)]">
+      Te acompañamos en cada paso, con discreción, respeto<br class="hidden md:inline" /> y un servicio de confianza.
+    </p>
+    <ul class="mt-10 flex flex-col items-start gap-10 md:mt-[3.5vw] md:flex-row md:gap-0">
+      {
+        items.map(({ Icono, titulo, texto }, i) => (
+          <li class="reveal flex w-[200px] flex-col items-center gap-[1.36vw] text-center md:w-[15.3vw]" style={`animation-delay:${i * 80}ms`}>
+            <span class="bg-cta grid size-[72px] place-items-center rounded-full md:size-[clamp(60px,5.24vw,100px)]">
+              <Icono className="size-full min-h-0 min-w-0 text-white" />
+            </span>
+            <span class="mt-3 text-[18px] font-medium md:mt-0 md:text-[clamp(15px,1.26vw,24.3px)]">{titulo}</span>
+            <span class="text-[16px] font-light leading-snug md:text-[clamp(14px,1.26vw,24.3px)]">
+              {texto[0]}
+              <br />
+              {texto[1]}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+---
+/** "¿Tienes alguna consulta?" (238:326 desktop / 256:290 móvil). */
+import { Image } from "astro:assets";
+import fondo from "../../assets/backgrounds/atencion-luna-ciudad.jpg";
+import CtaLink from "../ui/CtaLink.astro";
+import { linkWhatsApp } from "../../lib/whatsapp";
+---
+
+<section class="container-lr">
+  <div class="reveal relative isolate flex flex-col items-center gap-6 overflow-hidden rounded-[28px] px-6 py-10 text-center md:flex-row md:justify-between md:gap-[3vw] md:px-[4.7vw] md:py-[1.8vw] md:text-left">
+    <Image
+      src={fondo}
+      alt=""
+      widths={[640, 1100, 1644]}
+      sizes="90vw"
+      class="absolute inset-0 -z-10 size-full object-cover object-[75%_35%] brightness-75 saturate-150"
+    />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-[#2a0710]/80 via-[#3a0a14]/40 to-transparent"></div>
+    <div class="flex flex-col gap-3 [text-shadow:0_4px_44px_black] md:gap-[0.9vw]">
+      <h2 class="t-section">¿Tienes alguna consulta?</h2>
+      <p class="text-[17px] font-light md:text-[clamp(16px,1.65vw,31.8px)]">Escríbenos por WhatsApp y con gusto te atendemos.</p>
+    </div>
+    <CtaLink
+      href={linkWhatsApp()}
+      target="_blank"
+      rel="noopener"
+      icon="whatsapp"
+      class="h-[60px] shrink-0 px-8 text-[20px] md:h-[clamp(56px,4.86vw,93px)] md:px-[3.1vw] md:text-[clamp(18px,1.77vw,34px)]"
+    >
+      WhatsApp
+    </CtaLink>
+  </div>
+</section>

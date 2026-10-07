@@ -1,0 +1,41 @@
+---
+/** Logo de Luna Roja: avatar (luna + silueta) y wordmark con degradado, ambos del Figma. */
+import { Image } from "astro:assets";
+import avatar from "../../assets/brand/luna-avatar.png";
+import wordmark from "../../assets/brand/luna-roja-titulo.png";
+
+interface Props {
+  /** Alto del avatar en px; el wordmark se escala proporcionalmente (Figma: 55 → 41.5). */
+  size?: number;
+  showWordmark?: boolean;
+  class?: string;
+  eager?: boolean;
+}
+
+const { size = 55, showWordmark = true, class: className, eager = false } = Astro.props;
+const wordH = size * 0.755;
+const wordW = (wordmark.width / wordmark.height) * wordH;
+---
+
+<span class:list={["inline-flex items-center", className]} style={`gap:${size * 0.24}px`}>
+  <Image
+    src={avatar}
+    alt={showWordmark ? "" : "Luna Roja"}
+    width={size}
+    height={Math.round(size * 1.01)}
+    densities={[1, 2]}
+    loading={eager ? "eager" : "lazy"}
+    class="shrink-0 rounded-full"
+  />
+  {showWordmark && (
+    <Image
+      src={wordmark}
+      alt="Luna Roja"
+      width={Math.round(wordW)}
+      height={Math.round(wordH)}
+      densities={[1, 2]}
+      loading={eager ? "eager" : "lazy"}
+      class="shrink-0"
+    />
+  )}
+</span>

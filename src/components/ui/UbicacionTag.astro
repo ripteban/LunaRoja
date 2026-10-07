@@ -1,0 +1,18 @@
+---
+/** "📍 San Salvador" con la barra roja debajo (480:720 / 324:441 del Figma). */
+import { LocationDot } from "./icons";
+
+interface Props {
+  texto: string;
+  class?: string;
+}
+const { texto, class: className } = Astro.props;
+---
+
+<div class:list={["inline-flex flex-col items-stretch gap-1", className]}>
+  <span class="inline-flex items-center gap-[0.24em] whitespace-nowrap font-semibold leading-tight text-white">
+    <LocationDot className="size-[0.73em] shrink-0" />
+    {texto}
+  </span>
+  <span class="bg-cta h-[0.16em] min-h-1 rounded-full"></span>
+</div>

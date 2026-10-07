@@ -1,0 +1,26 @@
+---
+/** "Así de fácil" (238:320 desktop / 195:471 móvil): tres pasos con íconos rojos del Figma. */
+import { CalendarCheck, LocationArrow, Search } from "../ui/icons";
+
+const pasos = [
+  { Icono: Search, texto: "Explora perfiles" },
+  { Icono: CalendarCheck, texto: "Consulta Disponibilidad" },
+  { Icono: LocationArrow, texto: "Coordina tu encuentro" },
+];
+---
+
+<section class="container-lr py-16 md:py-[clamp(64px,5.6vw,108px)]">
+  <h2 class="t-section reveal text-center">Así de fácil</h2>
+  <ol class="mt-12 flex flex-col items-center gap-[51px] md:mt-[3.3vw] md:flex-row md:items-end md:justify-center md:gap-[clamp(32px,8.95vw,172px)]">
+    {
+      pasos.map(({ Icono, texto }, i) => (
+        <li class="reveal flex flex-col items-center gap-[25px] md:w-[23.4vw] md:gap-[2.08vw]" style={`animation-delay:${i * 80}ms`}>
+          <span class="bg-cta grid size-[94px] place-items-center rounded-full shadow-[0_10px_40px_rgb(255_51_72/0.25)] transition-transform duration-300 hover:scale-105 md:size-[clamp(80px,7.66vw,147px)]">
+            <Icono className="size-full min-h-0 min-w-0 text-white" />
+          </span>
+          <span class="whitespace-nowrap text-[20.25px] font-medium md:text-[clamp(16px,1.94vw,37.2px)]">{texto}</span>
+        </li>
+      ))
+    }
+  </ol>
+</section>

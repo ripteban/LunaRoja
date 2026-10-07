@@ -1,0 +1,29 @@
+---
+/** "Modelos Disponibles" (480:718 + 95:125): encabezado y grilla de tarjetas generada desde el contenido. */
+import ModelCard from "./ModelCard.astro";
+import UbicacionTag from "../ui/UbicacionTag.astro";
+import type { Modelo } from "../../lib/modelos";
+import { SITE } from "../../config/site";
+
+interface Props {
+  modelos: Modelo[];
+}
+const { modelos } = Astro.props;
+---
+
+<section id="modelos" class="container-lr scroll-mt-28 py-16 md:py-[clamp(64px,4.7vw,90px)]">
+  <div class="flex flex-col items-center gap-5 md:flex-row md:items-start md:justify-between">
+    <h2 class="t-section reveal text-center font-semibold md:text-left">Modelos Disponibles</h2>
+    <UbicacionTag texto={SITE.ciudad} class="reveal text-[24px] md:mt-[0.6vw] md:text-[clamp(24px,2.53vw,48.5px)]" />
+  </div>
+
+  <div class="mx-auto mt-10 grid max-w-[1552px] grid-cols-1 justify-items-center gap-[clamp(40px,4.95vw,95px)] sm:grid-cols-2 md:mt-[4.6vw] lg:grid-cols-3">
+    {
+      modelos.map((m, i) => (
+        <div class="w-full max-w-[369px] sm:max-w-[454px]">
+          <ModelCard modelo={m} prioridad={i < 3} />
+        </div>
+      ))
+    }
+  </div>
+</section>

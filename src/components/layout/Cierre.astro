@@ -1,0 +1,26 @@
+---
+/** Cierre de página: logo grande sobre las nubes rojas (225:733 desktop / 256:305 móvil). */
+import { Image } from "astro:assets";
+import nubes from "../../assets/backgrounds/nubes-cierre.jpg";
+import Logo from "./Logo.astro";
+import { SITE } from "../../config/site";
+---
+
+<footer class="relative isolate mt-16 h-[420px] overflow-hidden md:mt-[3vw] md:h-[min(45.5vw,874px)]">
+  <Image
+    src={nubes}
+    alt=""
+    widths={[800, 1280, 1920]}
+    sizes="100vw"
+    class="absolute inset-x-0 bottom-0 -z-10 h-full w-full object-cover object-bottom [mask-image:linear-gradient(to_bottom,transparent_30%,black_55%)] motion-safe:animate-drift"
+  />
+  <div class="flex justify-center pt-8 md:pt-[4vw]">
+    <a href="/" class="reveal transition-transform duration-500 hover:scale-[1.02]" aria-label="Luna Roja, inicio">
+      <span class="block md:hidden"><Logo size={86} /></span>
+      <span class="hidden md:block [&_img]:h-auto [&_img:first-child]:w-[16vw] [&_img:last-child]:w-[45.6vw]"><Logo size={311} /></span>
+    </a>
+  </div>
+  <p class="absolute inset-x-0 bottom-4 text-center text-[13px] text-ink/60">
+    © {new Date().getFullYear()} {SITE.nombre}. Solo para mayores de 18 años.
+  </p>
+</footer>

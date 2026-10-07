@@ -1,0 +1,23 @@
+---
+/** Píldora de modalidad ("A domicilio" / "Presencial") con el ícono del Figma. */
+import { Building, Heel } from "./icons";
+
+interface Props {
+  modalidad: "domicilio" | "presencial";
+  tono?: "glass" | "rojo";
+  class?: string;
+}
+
+const { modalidad, tono = "glass", class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    "inline-flex items-center gap-[0.7em] whitespace-nowrap rounded-full px-[1.26em] py-[0.65em] font-medium leading-none text-white",
+    tono === "rojo" ? "bg-cta shadow-[inset_0_-4px_4px_rgb(255_255_255/0.25),inset_0_4px_4px_rgb(255_255_255/0.25),inset_0_0_21px_var(--color-glow)]" : "glass",
+    className,
+  ]}
+>
+  {modalidad === "domicilio" ? <Heel className="size-[1.71em]" /> : <Building className="h-[1.71em] w-auto" />}
+  {modalidad === "domicilio" ? "A domicilio" : "Presencial"}
+</span>

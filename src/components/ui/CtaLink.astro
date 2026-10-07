@@ -1,0 +1,33 @@
+---
+/**
+ * Botón-enlace rojo de la marca. `variant="gradient"` usa el degradado de los CTA de la home;
+ * `variant="solid"` el rojo plano (#ff3348) de los botones de reserva.
+ */
+import type { HTMLAttributes } from "astro/types";
+import { ChevronRight, WhatsApp } from "./icons";
+
+interface Props extends HTMLAttributes<"a"> {
+  variant?: "gradient" | "solid";
+  icon?: "whatsapp";
+  chevron?: boolean;
+}
+
+const { variant = "gradient", icon, chevron = true, class: className, ...rest } = Astro.props;
+---
+
+<a
+  class:list={[
+    "group relative inline-flex items-center justify-center gap-[0.6em] rounded-full font-medium text-white",
+    "transition-[transform,filter] duration-200 ease-out active:scale-[0.97] [@media(hover:hover)]:hover:brightness-110",
+    "after:pointer-events-none after:absolute after:inset-0 after:rounded-full after:opacity-0 after:shadow-[0_0_28px_rgb(255_56_60/0.65)] after:transition-opacity after:duration-300 [@media(hover:hover)]:hover:after:opacity-100",
+    variant === "gradient" ? "bg-cta shadow-glow" : "bg-red",
+    className,
+  ]}
+  {...rest}
+>
+  {icon === "whatsapp" && <WhatsApp className="size-[1.6em] shrink-0" />}
+  <slot />
+  {chevron && (
+    <ChevronRight className="h-[0.8em] w-auto shrink-0 transition-transform duration-200 group-hover:translate-x-[3px]" />
+  )}
+</a>

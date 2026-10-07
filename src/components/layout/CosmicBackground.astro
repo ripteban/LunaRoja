@@ -1,0 +1,51 @@
+---
+/**
+ * Fondo luna roja + nubes (nodo "Fondo" 18:5 del Figma). En el Figma es un video;
+ * aquí se usa el fotograma como imagen y se anima con CSS (luna flotando, nubes a la deriva),
+ * que pesa mucho menos en móvil. Usa una versión recortada vertical para pantallas angostas.
+ */
+import { getImage } from "astro:assets";
+import fondo from "../../assets/backgrounds/luna-nubes.jpg";
+import fondoMovil from "../../assets/backgrounds/luna-nubes-mobile.jpg";
+
+interface Props {
+  /** `hero`: ocupa su contenedor y se desvanece abajo. `pagina`: fijo detrás de todo el contenido. */
+  modo?: "hero" | "pagina";
+  prioridad?: boolean;
+}
+
+const { modo = "hero", prioridad = true } = Astro.props;
+
+const [desk, movil] = await Promise.all([
+  Promise.all([960, 1440, 1920].map((w) => getImage({ src: fondo, width: w, format: "webp", quality: 72 }))),
+  Promise.all([480, 840].map((w) => getImage({ src: fondoMovil, width: w, format: "webp", quality: 70 }))),
+]);
+const srcset = (imgs: { src: string; attributes: Record<string, any> }[]) =>
+  imgs.map((i) => `${i.src} ${i.attributes.width}w`).join(", ");
+---
+
+<div
+  aria-hidden="true"
+  class:list={[
+    "pointer-events-none overflow-hidden",
+    modo === "hero" ? "absolute inset-0" : "absolute inset-x-0 top-0 h-[min(100svh,1080px)]",
+  ]}
+>
+  <picture>
+    <source media="(max-width: 767px)" srcset={srcset(movil)} sizes="100vw" />
+    <img
+      src={desk[2].src}
+      srcset={srcset(desk)}
+      sizes="100vw"
+      width="1920"
+      height="1080"
+      alt=""
+      loading={prioridad ? "eager" : "lazy"}
+      fetchpriority={prioridad ? "high" : "auto"}
+      decoding="async"
+      class="absolute inset-0 size-full origin-top object-cover object-top motion-safe:animate-drift will-change-transform"
+    />
+  </picture>
+  <div class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-bg via-bg/70 to-transparent"></div>
+  {modo === "pagina" && <div class="absolute inset-0 bg-bg/35"></div>}
+</div>

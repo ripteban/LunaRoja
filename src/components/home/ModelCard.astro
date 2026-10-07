@@ -1,0 +1,62 @@
+---
+/**
+ * Tarjeta de modelo (componente "Product-card" del Figma, 95:327).
+ * Todas las medidas van en unidades `cqw` para que escale igual en móvil (369 px) y desktop (454 px).
+ * En móvil se usa la variante "active" (borde y brillo rojo); en desktop se activa al pasar el mouse.
+ */
+import { Image } from "astro:assets";
+import type { Modelo } from "../../lib/modelos";
+import ModalidadChip from "../ui/ModalidadChip.astro";
+import { ChevronRight } from "../ui/icons";
+
+interface Props {
+  modelo: Modelo;
+  /** Las primeras tarjetas cargan antes porque suelen verse sin hacer scroll en desktop. */
+  prioridad?: boolean;
+}
+
+const { modelo, prioridad = false } = Astro.props;
+const { nombre, frase, tarifaHora, modalidades, fotos } = modelo.data;
+const href = `/modelos/${modelo.id}`;
+const portada = fotos[0];
+---
+
+<article class="reveal group/card @container relative">
+  <a
+    href={href}
+    class="relative block aspect-[454/682] overflow-hidden rounded-[13.8cqw] border-[0.3cqw] border-grad-from bg-surface shadow-[0_25px_126px_rgb(72_72_72/0.28)] transition-[transform,border-color] duration-500 ease-[var(--ease-out-soft)] lg:border-transparent [@media(hover:hover)]:hover:-translate-y-1.5 [@media(hover:hover)]:lg:hover:border-grad-from"
+    aria-label={`Ver perfil de ${nombre}`}
+  >
+    <Image
+      src={portada.src}
+      alt={portada.alt ?? `${nombre}, modelo de Luna Roja`}
+      widths={[360, 480, 720, 960]}
+      sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
+      loading={prioridad ? "eager" : "lazy"}
+      fetchpriority={prioridad ? "high" : "auto"}
+      class="absolute inset-0 size-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] [@media(hover:hover)]:group-hover/card:scale-[1.04]"
+      transition:name={`foto-${modelo.id}`}
+    />
+    <!-- Brillo rojo interno: siempre en móvil, al pasar el mouse en desktop -->
+    <span class="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_21px_var(--color-glow)] transition-opacity duration-500 lg:opacity-0 lg:group-hover/card:opacity-100"></span>
+    <span class="pointer-events-none absolute inset-x-0 bottom-0 h-[64%] bg-gradient-to-t from-black/60 from-[18%] to-transparent"></span>
+
+    <span class="absolute inset-x-0 top-[3.7cqw] flex justify-center gap-[1.7cqw] text-[4.13cqw]">
+      {modalidades.map((m) => <ModalidadChip modalidad={m} tono="glass" class="lg:group-hover/card:bg-cta transition-colors" />)}
+    </span>
+
+    <span class="absolute inset-x-[5.9cqw] bottom-[5.9cqw] flex flex-col gap-[5.9cqw]">
+      <span class="flex flex-col gap-[4.6cqw]">
+        <span class="flex items-center justify-between text-[6.5cqw] font-medium leading-none text-white">
+          <span>{nombre}</span>
+          <span>{tarifaHora}$/1h</span>
+        </span>
+        <span class="text-[4.73cqw] leading-[1.62] text-white/82">{frase}</span>
+      </span>
+      <span class="bg-cta flex h-[13cqw] w-full items-center justify-center gap-[3cqw] rounded-full text-[4.73cqw] font-medium text-white shadow-[inset_0_0_21px_var(--color-glow)] transition-transform duration-200 group-active/card:scale-[0.97]">
+        Ver perfil
+        <ChevronRight className="h-[3.56cqw] w-auto transition-transform duration-200 group-hover/card:translate-x-[3px]" />
+      </span>
+    </span>
+  </a>
+</article>

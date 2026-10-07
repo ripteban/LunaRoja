@@ -1,0 +1,32 @@
+---
+/**
+ * Navegación flotante del Figma (nodo 122:682 desktop / 245:884 móvil):
+ * píldora translúcida con el logo y el botón "Consultas" por WhatsApp. En móvil no hay menú.
+ */
+import Logo from "./Logo.astro";
+import { ChevronRight, WhatsApp } from "../ui/icons";
+import { linkWhatsApp } from "../../lib/whatsapp";
+---
+
+<header class="pointer-events-none fixed inset-x-0 top-0 z-40 px-[11px] pt-[max(env(safe-area-inset-top),14px)] lg:px-[4.6vw] lg:pt-[clamp(16px,2.45vw,47px)]" transition:persist>
+  <nav
+    aria-label="Principal"
+    class="pointer-events-auto mx-auto flex max-w-[1744px] items-center justify-between rounded-full bg-black/20 p-[10px] shadow-glass-thin backdrop-blur-md"
+  >
+    <a href="/" class="rounded-full transition-transform duration-200 active:scale-95" aria-label="Luna Roja, inicio">
+      <span class="hidden lg:block"><Logo size={55} eager /></span>
+      <span class="block lg:hidden"><Logo size={55} showWordmark={false} eager /></span>
+    </a>
+    <a
+      href={linkWhatsApp()}
+      target="_blank"
+      rel="noopener"
+      class="group bg-cta inline-flex h-[55px] items-center justify-center gap-3 rounded-full px-[22px] text-[19.5px] font-medium text-white transition-transform duration-200 active:scale-[0.97] lg:h-[59px] lg:px-[34px]"
+    >
+      <WhatsApp className="size-[33px]" />
+      <span class="hidden lg:inline">Consultas</span>
+      <span class="sr-only lg:hidden">Consultas por WhatsApp</span>
+      <ChevronRight className="h-[18px] w-auto transition-transform duration-200 group-hover:translate-x-[3px]" />
+    </a>
+  </nav>
+</header>
