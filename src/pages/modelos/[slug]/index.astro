@@ -1,0 +1,86 @@
+---
+/** Perfil de modelo (299:412 desktop / 514:1544 móvil). Se genera una página por archivo de contenido. */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CosmicBackground from "../../../components/layout/CosmicBackground.astro";
+import Cierre from "../../../components/layout/Cierre.astro";
+import PhotoCarousel from "../../../components/perfil/PhotoCarousel";
+import ProfileStats from "../../../components/perfil/ProfileStats.astro";
+import CoverageMap from "../../../components/perfil/CoverageMap.astro";
+import ModalidadChip from "../../../components/ui/ModalidadChip.astro";
+import UbicacionTag from "../../../components/ui/UbicacionTag.astro";
+import CtaLink from "../../../components/ui/CtaLink.astro";
+import { agendaDe, modelosActivas, zonaDe, type Modelo } from "../../../lib/modelos";
+import { imagenResponsive } from "../../../lib/imagenes";
+import { formatPrecio } from "../../../lib/format";
+
+export async function getStaticPaths() {
+  const modelos = await modelosActivas();
+  return modelos.map((modelo) => ({ params: { slug: modelo.id }, props: { modelo } }));
+}
+
+interface Props {
+  modelo: Modelo;
+}
+
+const { modelo } = Astro.props;
+const d = modelo.data;
+const zona = zonaDe(modelo);
+const fotos = await Promise.all(
+  d.fotos.map((f, i) => imagenResponsive(f.src, f.alt ?? `${d.nombre}, foto ${i + 1}`)),
+);
+---
+
+<BaseLayout title={d.nombre} description={`${d.nombre}: ${d.frase}`}>
+  <div class="relative isolate">
+    <CosmicBackground modo="pagina" />
+
+    <div class="relative mx-auto max-w-[1357px] px-6 pb-10 pt-[104px] sm:px-10 lg:px-[3vw] lg:pt-[clamp(120px,8.85vw,170px)] 2xl:px-0">
+      <section class="grid items-start gap-8 lg:grid-cols-[628fr_679fr] lg:gap-[clamp(28px,2.63vw,50.5px)]">
+        <div class="mx-auto w-full max-w-[420px] lg:max-w-none" transition:name={`foto-${modelo.id}`}>
+          <PhotoCarousel client:visible fotos={fotos} agenda={agendaDe(modelo)} nombre={d.nombre} />
+        </div>
+
+        <div class="flex flex-col items-center text-center lg:items-start lg:pt-[0.5vw] lg:text-left">
+          <h1 class="animate-rise font-display text-[64px] leading-[1.1] text-ink lg:text-[clamp(72px,7.5vw,144px)]">{d.nombre}</h1>
+          <p class="animate-rise max-w-[680px] text-[17px] leading-[1.58] text-ink [animation-delay:80ms] lg:text-[clamp(17px,1.6vw,30.8px)]">
+            {d.frase}
+          </p>
+
+          <div class="mt-6 flex flex-wrap justify-center gap-2 text-[15px] lg:mt-[clamp(20px,1.72vw,33px)] lg:justify-start lg:text-[clamp(13px,1.02vw,19.6px)]">
+            {d.modalidades.map((m) => <ModalidadChip modalidad={m} />)}
+          </div>
+
+          <div class="mt-6 w-full sm:w-auto lg:mt-[clamp(20px,1.62vw,31px)]">
+            <ProfileStats edad={d.edad} zona={zona} tatuajes={d.tatuajes} estatura={d.estatura} />
+          </div>
+
+          <p class="mt-5 flex items-baseline gap-4 lg:mt-[clamp(12px,0.6vw,12px)] lg:gap-[clamp(14px,1.42vw,27px)]">
+            <span class="text-[40px] font-semibold leading-tight lg:text-[clamp(40px,3.85vw,74px)]">{formatPrecio(d.tarifaHora)}</span>
+            <span class="text-[27px] leading-tight lg:text-[clamp(26px,2.58vw,49.4px)]">/ 1 hora</span>
+          </p>
+
+          <CtaLink
+            href={`/modelos/${modelo.id}/disponibilidad`}
+            variant="solid"
+            class="mt-4 h-[54px] w-full max-w-[420px] text-[17px] lg:mt-[clamp(10px,0.7vw,13.6px)] lg:h-[clamp(56px,5.06vw,97px)] lg:max-w-none lg:text-[clamp(17px,1.42vw,27.2px)]"
+          >
+            Consultar disponibilidad
+          </CtaLink>
+        </div>
+      </section>
+
+      <section class="mt-14 lg:mt-[clamp(48px,3.82vw,73px)]" aria-labelledby="cobertura-titulo">
+        <div class="flex flex-col items-center gap-4 lg:flex-row lg:justify-between">
+          <h2 id="cobertura-titulo" class="reveal font-display text-[30px] leading-tight lg:text-[clamp(32px,3.04vw,58.3px)]">
+            Cobertura y contacto
+          </h2>
+          <UbicacionTag texto={zona} class="reveal text-[20px] lg:text-[clamp(22px,2.17vw,41.6px)]" />
+        </div>
+        <div class="reveal mx-auto mt-8 max-w-[1234px] px-2 lg:mt-[3vw] lg:px-[4.5%]">
+          <CoverageMap cobertura={d.cobertura} />
+        </div>
+      </section>
+    </div>
+  </div>
+  <Cierre slot="after" />
+</BaseLayout>

@@ -26,6 +26,7 @@ const portada = fotos[0];
     href={href}
     class="relative block aspect-[454/682] overflow-hidden rounded-[13.8cqw] border-[0.3cqw] border-grad-from bg-surface shadow-[0_25px_126px_rgb(72_72_72/0.28)] transition-[transform,border-color] duration-500 ease-[var(--ease-out-soft)] lg:border-transparent [@media(hover:hover)]:hover:-translate-y-1.5 [@media(hover:hover)]:lg:hover:border-grad-from"
     aria-label={`Ver perfil de ${nombre}`}
+    transition:name={`foto-${modelo.id}`}
   >
     <Image
       src={portada.src}
@@ -35,7 +36,6 @@ const portada = fotos[0];
       loading={prioridad ? "eager" : "lazy"}
       fetchpriority={prioridad ? "high" : "auto"}
       class="absolute inset-0 size-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] [@media(hover:hover)]:group-hover/card:scale-[1.04]"
-      transition:name={`foto-${modelo.id}`}
     />
     <!-- Brillo rojo interno: siempre en móvil, al pasar el mouse en desktop -->
     <span class="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_21px_var(--color-glow)] transition-opacity duration-500 lg:opacity-0 lg:group-hover/card:opacity-100"></span>

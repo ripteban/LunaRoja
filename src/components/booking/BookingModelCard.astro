@@ -1,0 +1,38 @@
+---
+/** Tarjeta de la modelo en el paso de reserva ("Product-card 2/3", 514:1410 del Figma). */
+import { Image } from "astro:assets";
+import StatusBadge from "../perfil/StatusBadge";
+import { agendaDe, type Modelo } from "../../lib/modelos";
+
+interface Props {
+  modelo: Modelo;
+}
+const { modelo } = Astro.props;
+const { nombre, frase, fotos } = modelo.data;
+---
+
+<div class="@container relative mx-auto w-full max-w-[364px] xl:max-w-none" transition:name={`foto-${modelo.id}`}>
+  <a
+    href={`/modelos/${modelo.id}`}
+    class="group relative block aspect-[388/743] overflow-hidden rounded-[12.4cqw] border-[0.3cqw] border-grad-from"
+    aria-label={`Volver al perfil de ${nombre}`}
+  >
+    <Image
+      src={fotos[0].src}
+      alt={fotos[0].alt ?? nombre}
+      widths={[360, 540, 720]}
+      sizes="(min-width: 1280px) 20vw, 90vw"
+      loading="eager"
+      class="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+    />
+    <span class="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0_15px_var(--color-glow)]"></span>
+    <span class="pointer-events-none absolute inset-x-0 bottom-0 h-[51%] bg-gradient-to-t from-black/60 from-[18%] to-transparent"></span>
+    <span class="absolute inset-x-[8.8cqw] bottom-[9.5cqw] flex flex-col items-center gap-[1.3cqw] text-center">
+      <span class="text-[15.7cqw] font-medium leading-none text-white">{nombre}</span>
+      <span class="text-[4.73cqw] leading-[1.62] text-white/82">{frase}</span>
+    </span>
+  </a>
+  <div class="pointer-events-none absolute inset-x-[2.3cqw] top-[3cqw] text-[6cqw]">
+    <StatusBadge client:idle agenda={agendaDe(modelo)} />
+  </div>
+</div>

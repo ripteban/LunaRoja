@@ -1,0 +1,21 @@
+---
+/** Contenedor común de los pasos de reserva: fondo cósmico, título y ancho del Figma (1670/1920). */
+import CosmicBackground from "../layout/CosmicBackground.astro";
+
+interface Props {
+  titulo: string;
+}
+const { titulo } = Astro.props;
+---
+
+<div class="relative isolate min-h-[100svh]">
+  <CosmicBackground modo="pagina" />
+  <div class="relative mx-auto max-w-[1720px] px-6 pb-16 pt-[104px] sm:px-10 xl:px-[5.1vw] xl:pt-[clamp(110px,7.76vw,149px)]">
+    <h1 class="animate-rise text-center text-[30px] font-semibold leading-tight sm:text-[38px] xl:text-left xl:text-[clamp(38px,2.92vw,56px)]">
+      {titulo}
+    </h1>
+    <div class="mt-6 xl:mt-[clamp(20px,1.46vw,28px)] xl:px-[1.4vw]">
+      <slot />
+    </div>
+  </div>
+</div>

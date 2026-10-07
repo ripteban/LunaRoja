@@ -1,0 +1,62 @@
+---
+/**
+ * Mapa de cobertura (326:504 del Figma): El Salvador por departamento, con los de
+ * `cobertura` pintados con el degradado rojo y su nombre encima.
+ */
+import { DEPARTAMENTOS, MAPA_VIEWBOX, centroDe, type DepartamentoId } from "../../data/el-salvador";
+
+interface Props {
+  cobertura: DepartamentoId[];
+  class?: string;
+}
+
+const { cobertura, class: className } = Astro.props;
+const ids = Object.keys(DEPARTAMENTOS) as DepartamentoId[];
+const activos = new Set(cobertura);
+---
+
+<svg
+  viewBox={MAPA_VIEWBOX}
+  role="img"
+  aria-label={`Mapa de El Salvador. Cobertura: ${cobertura.map((id) => DEPARTAMENTOS[id].nombre).join(", ")}.`}
+  class:list={["h-auto w-full overflow-visible", className]}
+>
+  <defs>
+    <linearGradient id="lr-mapa-rojo" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ff5e62" />
+      <stop offset="1" stop-color="#ff0006" />
+    </linearGradient>
+  </defs>
+  {
+    ids.map((id) => (
+      <path
+        d={DEPARTAMENTOS[id].d}
+        fill={activos.has(id) ? "url(#lr-mapa-rojo)" : "transparent"}
+        stroke="#fff"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+        class:list={["transition-[fill,opacity] duration-300", activos.has(id) ? "mapa-activo" : "opacity-90 hover:fill-white/5"]}
+      >
+        <title>{DEPARTAMENTOS[id].nombre}</title>
+      </path>
+    ))
+  }
+  {
+    cobertura.map((id) => {
+      const { x, y } = centroDe(id);
+      const [l1, ...resto] = DEPARTAMENTOS[id].nombre.split(" ");
+      return (
+        <text x={x} y={y} text-anchor="middle" class="pointer-events-none fill-white font-sans text-[19px] font-semibold">
+          <tspan x={x} dy="-0.2em">{l1}</tspan>
+          {resto.length > 0 && <tspan x={x} dy="1em">{resto.join(" ")}</tspan>}
+        </text>
+      );
+    })
+  }
+</svg>
+
+<style>
+  .mapa-activo {
+    filter: drop-shadow(0 0 18px rgb(255 51 72 / 0.55));
+  }
+</style>

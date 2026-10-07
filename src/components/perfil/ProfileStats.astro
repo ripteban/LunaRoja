@@ -1,0 +1,35 @@
+---
+/** Panel "Datos del perfil" (335:773): Edad, Cobertura, Tatuajes y Estatura. */
+import { Height, LocationDot, PersonBadge, Star } from "../ui/icons";
+import { formatEstatura } from "../../lib/format";
+
+interface Props {
+  edad?: number;
+  zona: string;
+  tatuajes?: boolean;
+  estatura?: number;
+}
+
+const { edad, zona, tatuajes, estatura } = Astro.props;
+const pendiente = "Por confirmar";
+const datos = [
+  { Icono: PersonBadge, etiqueta: "Edad", valor: edad ? String(edad) : pendiente },
+  { Icono: LocationDot, etiqueta: "Cobertura", valor: zona },
+  { Icono: Star, etiqueta: "Tatuajes", valor: tatuajes === undefined ? pendiente : tatuajes ? "Sí" : "No" },
+  { Icono: Height, etiqueta: "Estatura", valor: estatura ? formatEstatura(estatura) : pendiente },
+];
+---
+
+<dl class="glass grid w-full text-left grid-cols-2 gap-x-6 gap-y-5 rounded-[22px] p-5 sm:w-auto sm:gap-x-[clamp(24px,4.44vw,85px)] sm:gap-y-[clamp(16px,2.05vw,39px)] lg:rounded-[clamp(20px,1.62vw,31px)] lg:p-[clamp(18px,1.43vw,27.5px)]">
+  {
+    datos.map(({ Icono, etiqueta, valor }) => (
+      <div class="flex items-center gap-4 lg:gap-[clamp(14px,1.53vw,29px)]">
+        <Icono className="h-[22px] w-auto min-w-0 shrink-0 lg:h-[clamp(20px,1.59vw,30.5px)]" />
+        <div class="min-w-0">
+          <dt class="text-[13px] leading-snug text-label lg:text-[clamp(13px,1.11vw,21.4px)]">{etiqueta}</dt>
+          <dd class="text-[15px] leading-snug text-ink lg:text-[clamp(15px,1.32vw,25.3px)]">{valor}</dd>
+        </div>
+      </div>
+    ))
+  }
+</dl>

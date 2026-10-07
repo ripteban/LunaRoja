@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PasoReserva from "../../../components/booking/PasoReserva.astro";
+import PaymentFlow from "../../../components/booking/PaymentFlow";
+import { agendaDe, modelosActivas, zonaDe, type Modelo } from "../../../lib/modelos";
+import { imagenResponsive } from "../../../lib/imagenes";
+import efectivo from "../../../assets/illustrations/pago-efectivo.png";
+import tarjeta from "../../../assets/illustrations/pago-tarjeta.png";
+import transferencia from "../../../assets/illustrations/pago-transferencia.png";
+
+export async function getStaticPaths() {
+  const modelos = await modelosActivas();
+  return modelos.map((modelo) => ({ params: { slug: modelo.id }, props: { modelo } }));
+}
+
+interface Props {
+  modelo: Modelo;
+}
+const { modelo } = Astro.props;
+const d = modelo.data;
+const [a, b, c] = await Promise.all(
+  [efectivo, tarjeta, transferencia].map((img) => imagenResponsive(img, "", [180, 348])),
+);
+---
+
+<BaseLayout title={`Pago · ${d.nombre}`}>
+  <PasoReserva titulo="Selecciona tu método de pago">
+    <PaymentFlow
+      client:load
+      slug={modelo.id}
+      nombre={d.nombre}
+      zona={zonaDe(modelo)}
+      tarifaHora={d.tarifaHora}
+      modalidades={d.modalidades}
+      agenda={agendaDe(modelo)}
+      ilustraciones={{ efectivo: a, tarjeta: b, transferencia: c }}
+    />
+  </PasoReserva>
+</BaseLayout>
