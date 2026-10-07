@@ -21,7 +21,7 @@ for (const [nombre, width, height] of [["mobile", 412, 915], ["desktop", 1920, 1
     });
     await page.waitForTimeout(400);
     const archivo = `${out}/${nombre}${ruta.replace(/[/?=&]+/g, "_")}.png`;
-    await page.screenshot({ path: archivo, fullPage: true });
+    await page.screenshot({ path: archivo, fullPage: !ruta.includes("aviso") });
     console.log(archivo);
   }
   await ctx.close();

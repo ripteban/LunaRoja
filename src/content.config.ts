@@ -37,7 +37,7 @@ const modelos = defineCollection({
       /** La primera foto es la portada (tarjeta y primera del carrusel). */
       fotos: z.array(z.object({ src: image(), alt: z.string().optional() })).min(1),
       /** Disponibilidad semanal en hora de El Salvador. Un rango puede cruzar la medianoche. */
-      horario: z.record(z.enum(dias), z.array(rangoHorario)).default({}),
+      horario: z.partialRecord(z.enum(dias), z.array(rangoHorario)).default({}),
       /** Fechas sin agenda, "AAAA-MM-DD". */
       bloqueos: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default([]),
       /** Horarios ya reservados, "AAAA-MM-DDTHH:MM". */

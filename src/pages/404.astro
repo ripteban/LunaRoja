@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CosmicBackground from "../components/layout/CosmicBackground.astro";
+import CtaLink from "../components/ui/CtaLink.astro";
+---
+
+<BaseLayout title="Página no encontrada">
+  <section class="relative isolate grid min-h-[100svh] place-items-center px-6 text-center">
+    <CosmicBackground />
+    <div class="relative flex flex-col items-center gap-6">
+      <p class="font-display text-[96px] leading-none text-red md:text-[160px]">404</p>
+      <h1 class="font-display text-[28px] md:text-[44px]">Esta página se perdió entre las nubes</h1>
+      <CtaLink href="/" class="h-[54px] px-10 text-[18px]">Volver al inicio</CtaLink>
+    </div>
+  </section>
+</BaseLayout>

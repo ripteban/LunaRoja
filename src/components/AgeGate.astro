@@ -1,0 +1,96 @@
+---
+/**
+ * Aviso legal +18 del Figma (nodo 320:298 desktop / 320:423 móvil).
+ * Usa <dialog> nativo (foco atrapado y fondo inerte sin librerías) y unas pocas líneas de JS,
+ * para que la home no tenga que cargar React. Se muestra hasta presionar "Entrar" (30 días).
+ */
+import { ChevronRight } from "./ui/icons";
+---
+
+<dialog id="aviso-18" aria-labelledby="aviso-titulo" class="aviso m-auto max-h-[calc(100dvh-24px)] w-[calc(100%-24px)] max-w-[1775px] overflow-y-auto bg-transparent p-0 text-ink backdrop:bg-bg/80 backdrop:backdrop-blur-sm">
+  <div tabindex="-1" autofocus class="flex flex-col items-center gap-6 rounded-[40px] outline-none bg-black/65 px-6 py-8 shadow-[inset_0_-2px_18.4px_rgb(234_21_21/0.4),inset_0_2px_16.1px_rgb(255_255_255/0.24)] sm:rounded-[64px] sm:p-10 lg:gap-[39px] lg:rounded-[100px] lg:p-[50px]">
+    <h2 id="aviso-titulo" class="text-center text-[22px] font-semibold leading-tight sm:text-[32px] lg:text-[clamp(32px,2.53vw,48.5px)]">
+      AVISO IMPORTANTE ANTES DE “ENTRAR”
+    </h2>
+    <div class="space-y-5 text-[15px] font-light leading-snug sm:text-[19px] lg:text-[clamp(19px,1.56vw,30px)]">
+      <p>
+        Al presionar el botón de <strong>“ENTRAR”</strong>, el usuario <strong>ACEPTA Y CERTIFICA QUE ES MAYOR DE 18 AÑOS</strong> y
+        exonera al proveedor de servicios, propietarios y creadores de <strong>“Luna Roja”</strong> de toda responsabilidad por el
+        contenido subido y compartido en el sitio web y por el uso de este servicio.
+      </p>
+      <p>
+        Somos Luna Roja y nuestro objetivo es de entretenimiento y diversión, donde <strong>NO PUBLICAMOS</strong> material que promueva
+        la <strong>Trata de Personas, Violaciones y Abusos Sexuales, Etc.</strong> Es decir, material relacionado con cualquier <strong>actividad sexual no consentida</strong>, que atente contra la libertad sexual o dignidad de las personas, y que pueda
+        ser constitutiva de delito.
+      </p>
+      <p>
+        Toda publicación, material como fotos y videos es <strong>CONSENTIDO Y APROBADO POR NUESTRO STAFF DE SEÑORITAS, por lo tanto,
+        nos dan los derechos y autorizaciones para su publicación.</strong> Siempre promovemos y contratamos chicas desde los 18 años en
+        adelante, exigiendo el Documento Único de Identidad (DUI).
+      </p>
+    </div>
+    <button
+      type="button"
+      data-entrar
+      class="group bg-cta inline-flex h-[64px] items-center justify-center gap-4 rounded-full px-16 text-[22px] font-medium text-ink transition-transform duration-200 active:scale-[0.97] lg:h-[clamp(72px,5.9vw,113px)] lg:px-[clamp(80px,8vw,155px)] lg:text-[clamp(24px,1.89vw,36px)]"
+    >
+      Entrar
+      <ChevronRight className="h-[0.75em] w-auto min-w-0 transition-transform group-hover:translate-x-1" />
+    </button>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const CLAVE = "lr_age_ok";
+    const dialogo = document.getElementById("aviso-18");
+    if (!dialogo || dialogo.dataset.listo) return;
+    dialogo.dataset.listo = "1";
+    let aceptado = false;
+    try {
+      aceptado = document.cookie.split("; ").includes(CLAVE + "=1") || localStorage.getItem(CLAVE) === "1";
+    } catch {}
+    if (aceptado) return;
+    dialogo.addEventListener("cancel", (e) => e.preventDefault()); // Esc no lo cierra
+    dialogo.querySelector("[data-entrar]").addEventListener("click", () => {
+      try {
+        document.cookie = CLAVE + "=1; max-age=2592000; path=/; samesite=lax";
+        localStorage.setItem(CLAVE, "1");
+      } catch {}
+      dialogo.classList.add("cerrando");
+      setTimeout(() => dialogo.close(), 300);
+    });
+    dialogo.showModal();
+  })();
+</script>
+
+<style>
+  .aviso strong {
+    font-weight: 600;
+    background-image: linear-gradient(to top, var(--color-grad-from), var(--color-grad-to) 142.74%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .aviso[open] {
+    animation: aviso-entra 0.5s var(--ease-spring) both;
+  }
+  .aviso[open]::backdrop {
+    animation: aviso-fondo 0.4s ease-out both;
+  }
+  .aviso.cerrando {
+    animation: aviso-sale 0.3s ease-in both;
+  }
+  .aviso.cerrando::backdrop {
+    animation: aviso-fondo 0.3s ease-in reverse both;
+  }
+  @keyframes aviso-entra {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  }
+  @keyframes aviso-sale {
+    to { opacity: 0; transform: scale(0.98); }
+  }
+  @keyframes aviso-fondo {
+    from { opacity: 0; }
+  }
+</style>

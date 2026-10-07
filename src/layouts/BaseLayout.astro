@@ -9,7 +9,7 @@ import "@fontsource/kapakana/400.css";
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Navbar from "../components/layout/Navbar.astro";
-import AgeGate from "../components/AgeGate";
+import AgeGate from "../components/AgeGate.astro";
 import { SITE } from "../config/site";
 
 interface Props {
@@ -39,6 +39,6 @@ const pageTitle = title ? `${title} · ${SITE.nombre}` : `${SITE.nombre} · ${SI
       <slot />
     </main>
     <slot name="after" />
-    <AgeGate client:load transition:persist />
+    <AgeGate />
   </body>
 </html>

@@ -3,6 +3,8 @@
 > Plan para pasar el diseño de Figma ([Luna Roja](https://www.figma.com/design/HGL6ey7HrhDm4XqJp2GSsM/Luna-Roja)) a un sitio en producción, **mobile-first**, rápido y con un sistema sencillo para agregar modelos.
 > Todo lo de este documento sale de leer el archivo con el MCP de Figma (Dev Mode): estructura de páginas, IDs de nodos, variables, estilos de texto y capturas.
 
+> **Estado (implementado):** la fase 0 a la 7 están hechas para desarrollo local. Las diferencias respecto a este plan están en la sección "Cambios al implementar", al final.
+
 ---
 
 ## 0. Resumen
@@ -14,8 +16,8 @@
 | Estilos | **Tailwind CSS v4**, con los tokens de Figma en `@theme` |
 | Micro-animaciones | **CSS primero** (transform/opacity) + **Motion** (`motion/react`, con `LazyMotion`) en las islas + **View Transitions** entre páginas |
 | Carruseles / swipe | **Embla Carousel** (pesa poco y está pensado para táctil) |
-| Estado de la reserva | **nanostores** + `@nanostores/persistent` (se comparte entre islas y páginas) |
-| Fechas | `date-fns` + `@date-fns/tz` (zona `America/El_Salvador`) |
+| Estado de la reserva | Parámetros en la URL (`?h=&m=&f=&t=`), ver "Cambios al implementar" |
+| Fechas | Utilidades propias en `src/lib/time.ts` (El Salvador es UTC-6 fijo, sin horario de verano) |
 | Modelos (contenido) | **Content Collections** de Astro: una carpeta por modelo, validada con Zod |
 | Panel para agregar modelos (fase 2) | **Sveltia CMS** (compatible con Decap): panel `/admin` basado en Git, sin backend |
 | Calidad | ESLint, Prettier (con plugin de Tailwind), Playwright (e2e + capturas comparadas con Figma), Lighthouse CI |
@@ -574,3 +576,21 @@ Las tipografías grandes se interpolan con `clamp()` entre el valor de 412 y el 
 5. **Quién actualiza la disponibilidad** y con qué frecuencia. Esto decide si basta con el archivo (fase 1) o si hace falta disponibilidad en vivo (fase 3).
 6. **Dominio y hosting.**
 7. **Menú en móvil**: *Recreación* tiene un ícono de menú, pero *Branding* mobile solo muestra logo + WhatsApp. ¿Se necesita menú?
+
+
+---
+
+## 13. Cambios al implementar
+
+Decisiones que se tomaron al construir el sitio y que cambian algo de lo planeado arriba:
+
+1. **Solo la página "Luna Roja Branding".** Por indicación del cliente se ignoraron "Recreación" y "02 · Componentes", así que no hay barra inferior fija en móvil. Los estados seleccionados de los botones de reserva, que el Figma no muestra, usan el degradado rojo de la marca.
+2. **El estado de la reserva va en la URL, no en nanostores.** Es más simple, no guarda nada en el dispositivo, sobrevive a recargas y hace funcionar "Editar" sin código extra. Por eso se quitaron `nanostores` y `date-fns`.
+3. **El aviso +18 es un `<dialog>` nativo en Astro**, no una isla React. Así la home carga unos 4 KB de JS en lugar de unos 100 KB.
+4. **Assets.** El proxy del entorno bloquea `www.figma.com`, así que las URLs temporales del MCP no se podían descargar. Las imágenes se exportaron con `get_screenshot` y los SVG con la Plugin API (`use_figma`, solo lectura).
+   - El fondo del hero es un **video** en Figma. Se usa un fotograma estático animado con CSS, que es más liviano en móvil. Si se quiere el video, basta con agregarlo en `CosmicBackground.astro`.
+   - El banner "Alcance actual" se exportó como imagen (desktop y móvil).
+   - El fondo del CTA "¿Tienes alguna consulta?" no se pudo aislar de su texto sin modificar el Figma, así que se reutiliza la imagen de luna y ciudad de "Atención personalizada".
+5. **Datos pendientes.** Edad, estatura y tatuajes solo vienen en el Figma para Alana; las demás muestran "Por confirmar" hasta completar su `index.md`. El WhatsApp es un número de prueba (`src/config/site.ts`).
+6. **Disponibilidad.** `disponibilidadForzada: true`: todas aparecen "Disponible" y solo se bloquean los horarios pasados, hasta conectar la app externa.
+7. **Astro 7** no pasa la prop `class` a componentes React. Desde `.astro` se usa `className` en los íconos.
